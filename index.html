@@ -40,8 +40,8 @@
         .menu-header {
             background-color: #178059;
             color: white;
-            /* padding: 20px; */
-            padding: 1.3rem 0;
+             padding: 20px; 
+            /*padding: 1.3rem 0;*/
             font-size: 18px;
             font-weight: bold;
             position: relative;
@@ -170,14 +170,13 @@
             scroll-behavior: smooth;
             -webkit-overflow-scrolling: touch;
             scrollbar-width: none;
-            /* Firefox */
             -ms-overflow-style: none;
-            /* Internet Explorer 10+ */
+           
         }
 
         .product-list::-webkit-scrollbar {
             display: none;
-            /* WebKit */
+          
         }
 
         .product-card {
@@ -234,7 +233,6 @@
 <body>
     <header>
         <div class="container header-content">
-             <!-- Toggle button -->
              <div class="menu-toggle" id="menu-toggle">☰</div>
             <div class="logo">QuicKart</div>
            
@@ -250,7 +248,7 @@
         </div>
     </header>
 
-    <!-- Menu container -->
+    <!-- Menu container when i click to menu -->
     <div class="menu" id="menu">
         <div class="menu-header">
             QuicKart
@@ -386,7 +384,7 @@
     <script>
         function scrollProducts(direction) {
             const productList = document.querySelector('.product-list');
-            const scrollAmount = 300; // Adjust this value based on your card width
+            const scrollAmount = 300; 
             productList.scrollBy({
                 left: direction * scrollAmount,
                 behavior: 'smooth'
@@ -394,7 +392,7 @@
         }
     </script>
 
-    <!-- JavaScript to handle menu toggle -->
+   
     <script>
         const menu = document.getElementById('menu');
         const menuToggle = document.getElementById('menu-toggle');
