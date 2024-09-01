@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QuicKart</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            background-color: #b7e7d6e1;
+        }
+
+        .menu {
+            background-color: white;
+            width: 80%;
+            max-width: 300px;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            transition: left 0.3s ease;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            z-index: 999;
+        }
+        .menu-toggle{
+            display: none;
+        }
+        .menu.active {
+            left: 0;
+        }
+        .menu-header {
+            background-color: #178059;
+            color: white;
+            /* padding: 20px; */
+            padding: 1.3rem 0;
+            font-size: 18px;
+            font-weight: bold;
+            position: relative;
+        }
+        .menu-close {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            display: none; 
+        }
+        .menu-list {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .menu-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        .menu-item a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        .menu-item i {
+            margin-right: 10px;
+            color: #2874f0;
+        }
+        .submenu {
+            background-color: #f9f9f9;
+            padding-left: 20px;
+        }
+        .menu-toggle {
+            /* position: absolute; */
+            /* top: 13px; */
+            /* left: 20px; */
+            font-size: 30px;
+            cursor: pointer;
+            /* z-index: 1000; */
+            margin-right: 20px;
+        }
+        .menu-toggle.hidden {
+            display: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        header {
+            background-color: #178059;
+            color: #fff;
+            padding: 1rem 0;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .search-bar {
+            margin: 1rem 0;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+        }
+
+        .categories {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+        }
+
+        .category {
+            text-align: center;
+        }
+
+        .category img {
+            width: 50px;
+            height: 50px;
+            margin-bottom: 0.5rem;
+        }
+
+        .featured-product {
+            background-color: #f0f0f0;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .product-section {
+            position: relative;
+        }
+
+        .product-list {
+            display: flex;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
+            /* Firefox */
+            -ms-overflow-style: none;
+            /* Internet Explorer 10+ */
+        }
+
+        .product-list::-webkit-scrollbar {
+            display: none;
+            /* WebKit */
+        }
+
+        .product-card {
+            flex: 0 0 auto;
+            width: 275px;
+            border: 1px solid #ddd;
+            padding: 1rem;
+            margin-right: 1rem;
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: fill;
+            margin-bottom: 1rem;
+        }
+
+        .product-info h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-weight: bold;
+            color: #2874f0;
+        }
+
+        .scroll-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            font-size: 2rem;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        .scroll-btn.left {
+            left: 0;
+        }
+
+        .scroll-btn.right {
+            right: 0;
+        }
+        @media screen and (max-width: 560px){
+            .menu-toggle{
+                display:block;
+          
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="container header-content">
+             <!-- Toggle button -->
+             <div class="menu-toggle" id="menu-toggle">☰</div>
+            <div class="logo">QuicKart</div>
+           
+            <nav>
+                <ul>
+                    <li><a href="#">Home</a></li>
+                    <li><a href="#">Categories</a></li>
+                    <li><a href="#">Cart</a></li>
+                    <li><a href="#">Login</a></li>
+                </ul>
+                
+            </nav>
+        </div>
+    </header>
+
+    <!-- Menu container -->
+    <div class="menu" id="menu">
+        <div class="menu-header">
+            QuicKart
+            <!-- Cross icon to close the menu -->
+            <span class="menu-close" id="menu-close">×</span>
+        </div>
+        <ul class="menu-list">
+            <li class="menu-item"><a href="#"><i>🏠</i> Home</a></li>
+            <li class="menu-item"><a href="#"><i>🛍️</i> All Categories</a></li>
+            <li class="menu-item"><a href="#"><i>📦</i> My Orders</a></li>
+            <li class="menu-item"><a href="#"><i>❤️</i> My Wishlist</a></li>
+            <li class="menu-item"><a href="#"><i>👤</i> My Account</a></li>
+            <li class="menu-item"><a href="#"><i>🛒</i> Cart</a></li>
+            <li class="menu-item"><a href="#"><i>🌐</i> Language</a></li>
+            <li class="menu-item"><a href="#"><i>📞</i> Customer Support</a></li>
+            <li class="menu-item"><a href="#"><i></i>X</a></li>
+            <li class="menu-item"><a href="#"><i></i>Y</a></li>
+            <li class="menu-item"><a href="#"><i></i></a></li>
+        </ul>
+    </div>
+
+    <main class="container">
+        <div class="search-bar">
+            <input type="text" placeholder="Search for products, brands and more">
+        </div>
+
+        <div class="categories">
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Electronics</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Fashion</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Home</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Beauty</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Electronics</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Fashion</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Home</p>
+            </div>
+            <div class="category">
+                <img src="./Assets/LOGO.PNG" alt="">
+                <p>Beauty</p>
+            </div>
+        </div>
+
+        <div class="featured-product">
+            <h2>Featured Product</h2>
+            <p>Amazing deal on our top-selling item!</p>
+            <img src="./Assets/LOGO.PNG" alt="Featured Product">
+        </div>
+
+        <div class="product-section">
+            <h2>Top Deals</h2>
+            <div class="product-list">
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 1">
+                    <div class="product-info">
+                        <h3>Product 1</h3>
+                        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p class="product-price">$19.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 2">
+                    <div class="product-info">
+                        <h3>Product 2</h3>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolor.</p>
+                        <p class="product-price">$24.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 3">
+                    <div class="product-info">
+                        <h3>Product 3</h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitati.</p>
+                        <p class="product-price">$14.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 4">
+                    <div class="product-info">
+                        <h3>Product 4</h3>
+                        <p>Duis aute irure dolor in reprehenderit in volupta.</p>
+                        <p class="product-price">$29.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 2">
+                    <div class="product-info">
+                        <h3>Product 2</h3>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna ali.</p>
+                        <p class="product-price">$24.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 3">
+                    <div class="product-info">
+                        <h3>Product 3</h3>
+                        <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco lab.</p>
+                        <p class="product-price">$14.99</p>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <img src="./Assets/LOGO.PNG" alt="Product 4">
+                    <div class="product-info">
+                        <h3>Product 4</h3>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse .</p>
+                        <p class="product-price">$29.99</p>
+                    </div>
+                </div>
+            </div>
+            <button class="scroll-btn left" onclick="scrollProducts(-1)">&lt;</button>
+            <button class="scroll-btn right" onclick="scrollProducts(1)">&gt;</button>
+        </div>
+    </main>
+
+    <script>
+        function scrollProducts(direction) {
+            const productList = document.querySelector('.product-list');
+            const scrollAmount = 300; // Adjust this value based on your card width
+            productList.scrollBy({
+                left: direction * scrollAmount,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+
+    <!-- JavaScript to handle menu toggle -->
+    <script>
+        const menu = document.getElementById('menu');
+        const menuToggle = document.getElementById('menu-toggle');
+        const menuClose = document.getElementById('menu-close');
+
+        menuToggle.addEventListener('click', () => {
+            menu.classList.toggle('active');
+            menuToggle.classList.toggle('hidden');
+            menuClose.style.display = 'block';
+        });
+
+        menuClose.addEventListener('click', () => {
+            menu.classList.remove('active');
+            menuToggle.classList.remove('hidden');
+            menuClose.style.display = 'none';
+        });
+    </script>
+</body>
+
+</html>
